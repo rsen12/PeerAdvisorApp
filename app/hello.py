@@ -1,2 +1,1 @@
-print("You suck")
-print("Rish")
+print("You suck Rishabh")
