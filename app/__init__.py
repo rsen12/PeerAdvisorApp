@@ -1,4 +1,4 @@
-import logging
+"""import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 from flask import Flask
@@ -7,7 +7,6 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from config import Config
 from flask_bootstrap import Bootstrap
-
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -46,3 +45,7 @@ if not app.debug:
     app.logger.info('Bookstore \'A Novel Idea\' startup')
 
 from app import routes, models, errors
+
+"""
+
+print('hello world')
