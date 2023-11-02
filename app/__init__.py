@@ -1,4 +1,4 @@
-"""import logging
+import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
 import os
 from flask import Flask
@@ -44,8 +44,6 @@ if not app.debug:
     app.logger.setLevel(logging.INFO)
     app.logger.info('Bookstore \'A Novel Idea\' startup')
 
-from app import routes, models, errors
+# from app import routes, models, errors
 
-"""
-
-print('hello world')
+from app import routes, models
