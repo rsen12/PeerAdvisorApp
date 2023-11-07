@@ -78,6 +78,7 @@ class CourseToUser(db.Model):
 class Professor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    department = db.Column(db.String(64))
     p2c = db.relationship('ProfessorToCourse', backref='professor', lazy='dynamic')
 
     def __repr__(self):

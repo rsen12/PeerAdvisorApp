@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Become an Advisee</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.name.label }}<br>
+            {{ form.name(size=256) }}<br>
+            {% for error in form.name.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.pronouns.label }}<br>
+            {{ form.pronouns(size=256) }}<br>
+            {% for error in form.pronouns.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.primary_advisor.label }}<br>
+            {{ form.primary_advisor() }}<br>
+            {% for error in form.primary_advisor.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.student_orgs.label }}<br>
+            {{ form.student_orgs() }}<br>
+            {% for error in form.student_orgs.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.interests.label }}<br>
+            {{ form.interests() }}<br>
+            {% for error in form.interests.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.preferred_contact_method.label }}<br>
+            {{ form.preferred_contact_method() }}<br>
+            {% for error in form.preferred_contact_method.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.class_year.label }}<br>
+            {{ form.class_year(size=10) }}<br>
+            {% for error in form.class_year.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.major.label }}<br>
+            {{ form.major() }}<br>
+            {% for error in form.major.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.minor.label }}<br>
+            {{ form.minor() }}<br>
+            {% for error in form.minor.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.internship.label }}<br>
+            {{ form.internship() }}<br>
+            {% for error in form.internship.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.study_abroad.label }}<br>
+            {{ form.study_abroad() }}<br>
+            {% for error in form.study_abroad.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{ form.research_exp.label }}<br>
+            {{ form.research_exp() }}<br>
+            {% for error in form.research_exp.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+
+
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

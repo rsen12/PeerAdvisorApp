@@ -3,11 +3,11 @@ from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.models import *
 from app.forms import *
-# from werkzeug.urls import url_parse
+from werkzeug.urls import *
 
 
 @app.route('/')
-# @app.route('/index')
+@app.route('/index')
 def index():
     return render_template('index.html', title='Home')
 
@@ -61,3 +61,9 @@ def reset_db():
     db.session.commit()
     # populate_data()
     return render_template('index.html', title='Home')
+
+
+@app.route('/advisee_form')
+def advisee_form():
+    form = AdviseeForm()
+    return render_template('advisee_signup_form.html', title='Advisee Form', form=form)

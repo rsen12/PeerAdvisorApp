@@ -4,12 +4,19 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
 
 
-class Advisor(FlaskForm):
+class AdviseeForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
-    class_yr = StringField('Class Year', validators=[DataRequired()])
-    internship = SelectField('Internship?', validators=[DataRequired()], coerce=int)
-    study_abroad = SelectField('Study Abroad?', validators=[DataRequired()], coerce=int)
-    research_exp = SelectField('Research Experience?', validators=[DataRequired()], coerce=int)
+    pronouns = StringField('Pronouns')
+    primary_advisor = SelectMultipleField(u'Primary Advisor(s)', coerce=int)
+    student_orgs = SelectMultipleField(u'Student Organization(s)', coerce=int)
+    interests = SelectMultipleField(u'Interest(s)', coerce=int)
+    preferred_contact_method = SelectField(u'Preferred Contact Method', choices=[('email', 'Email'), ('text', 'Text')])
+    class_year = SelectField(u'Class Year', validators=[DataRequired()], choices=[(2028, '2028'), (2027, '2027'), (2026, '2026'), (2025, '2025'), (2024, '2024'), (2023, '2023')], coerce=int)
+    major = SelectMultipleField(u'Major', validators=[DataRequired()], coerce=int)
+    minor = SelectMultipleField(u'Minor', validators=[DataRequired()], coerce=int)
+    internship = BooleanField('Internship?', validators=[DataRequired()])
+    study_abroad = BooleanField('Study Abroad?', validators=[DataRequired()])
+    research_exp = BooleanField('Research Experience?', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
