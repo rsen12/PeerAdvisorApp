@@ -84,9 +84,9 @@ class Professor(db.Model):
         return '<Professor {}>'.format(self.name)
 
 
-class ProfToCourse(db.Model):
+class ProfessorToCourse(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    prof_id = db.Column(db.Integer, db.ForeignKey('prof.id'), nullable=False)
+    prof_id = db.Column(db.Integer, db.ForeignKey('professor.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
 
 

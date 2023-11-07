@@ -1,7 +1,11 @@
 {% extends 'bootstrap/base.html' %}
 
 {% block title %}
-    {% if name %}{{name}} Peer Advising {% else %}Peer Advising{% endif %}
+    {% if name %}
+        {{name}} - Peer Advising
+    {% else %}
+        Peer Advising
+    {% endif %}
 {% endblock %}
 
 {% block navbar %}
