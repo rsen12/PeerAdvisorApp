@@ -42,7 +42,7 @@ if not app.debug:
     app.logger.addHandler(file_handler)
 
     app.logger.setLevel(logging.INFO)
-    app.logger.info('Bookstore \'A Novel Idea\' startup')
+    app.logger.info('Peer Advisor Application')
 
 # from app import routes, models, errors
 

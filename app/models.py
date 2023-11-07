@@ -6,13 +6,21 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), index=True)
+    username = db.Column(db.String(64), index=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     class_year = db.Column(db.Integer())
     internship = db.Column(db.Boolean())
     study_abroad = db.Column(db.Boolean())
     student_research = db.Column(db.Boolean())
+    m2u = db.relationship('MajorToUser', backref='user', lazy='dynamic')
+    o2u = db.relationship('StudentOrgToUser', backref='user', lazy='dynamic')
+    c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
+    i2u = db.relationship('InterestToUser', backref='user', lazy='dynamic')
+    """
+    advisee_id = db.relationship('Match', backref='user', lazy='dynamic')
+    advisor_id = db.relationship('Match', backref='user', lazy='dynamic')
+    """
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -24,14 +32,22 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    advisee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    advisor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     school = db.Column(db.String(64), unique=True)
+    m2u = db.relationship('MajorToUser', backref='major', lazy='dynamic')
 
     def __repr__(self):
         return '<Major {}>'.format(self.name)
@@ -46,6 +62,8 @@ class MajorToUser(db.Model):
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    c2u = db.relationship('CourseToUser', backref='course', lazy='dynamic')
+    p2c = db.relationship('ProfessorToCourse', backref='course', lazy='dynamic')
 
     def __repr__(self):
         return '<Course {}>'.format(self.name)
@@ -60,6 +78,7 @@ class CourseToUser(db.Model):
 class Professor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    p2c = db.relationship('ProfessorToCourse', backref='professor', lazy='dynamic')
 
     def __repr__(self):
         return '<Professor {}>'.format(self.name)
@@ -70,4 +89,32 @@ class ProfToCourse(db.Model):
     prof_id = db.Column(db.Integer, db.ForeignKey('prof.id'), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
 
+
+class Interest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    i2u = db.relationship('InterestToUser', backref='interest', lazy='dynamic')
+
+    def __repr__(self):
+        return '<Interest {}>'.format(self.name)
+
+
+class InterestToUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    interest_id = db.Column(db.Integer, db.ForeignKey('interest.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+
+class StudentOrg(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+
+    def __repr__(self):
+        return '<Student Org {}>'.format(self.name)
+
+
+class StudentOrgToUser(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('studentorg.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
