@@ -3,6 +3,11 @@ from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    advisee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    advisor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,8 +23,8 @@ class User(UserMixin, db.Model):
     c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
     i2u = db.relationship('InterestToUser', backref='user', lazy='dynamic')
 
-    advisee_id = db.relationship('Match', backref='advisee_user', lazy='dynamic')
-    advisor_id = db.relationship('Match', backref='advisor_user', lazy='dynamic')
+    advisees = db.relationship('Match', backref='advisee', lazy='dynamic', primaryjoin=id==Match.advisee_id)
+    advisors = db.relationship('Match', backref='advisor', lazy='dynamic', primaryjoin=id==Match.advisor_id)
 
 
     def __repr__(self):
@@ -32,10 +37,6 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-class Match(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    advisee_id = db.Column(db.Integer, db.ForeignKey('advisee.id'))
-    advisor_id = db.Column(db.Integer, db.ForeignKey('advisor.id'))
 
 
 @login.user_loader

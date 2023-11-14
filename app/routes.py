@@ -74,3 +74,18 @@ def advisee_form():
     form.minor.choices = [(m.id, m.title) for m in Major.query.all()]
 
     return render_template('advisee_signup_form.html', title='Advisee Form', form=form)
+
+
+@app.route('/advisee_matches')
+def advisee_matches():
+    return 'Not implemented yet'
+
+
+@app.route('/advisor_profile')
+def advisor_profile():
+    return 'Not implemented yet'
+
+
+@app.route('/ongoing_advisee_connections')
+def ongoing_advisee_connections():
+    return 'Not implemented yet'
