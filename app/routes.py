@@ -63,7 +63,29 @@ def reset_db():
     return render_template('index.html', title='Home')
 
 
-@app.route('/advisee_form')
+@app.route('/advisee_form', methods=['GET', 'POST'])
+# @login_required
 def advisee_form():
     form = AdviseeForm()
+    form.student_orgs.choices = [(o.id,o.title) for o in Org.query.all()]
+    form.major.choices = [(m.id, m.title) for m in Major.query.all()]
+    form.primary_advisor.choices = [(p.id, p.title) for p in Professor.query.all()]
+    form.interests.choices = [(i.id, i.title) for i in Interest.query.all()]
+    form.minor.choices = [(m.id, m.title) for m in Major.query.all()]
+
     return render_template('advisee_signup_form.html', title='Advisee Form', form=form)
+
+
+@app.route('/advisee_matches')
+def advisee_matches():
+    return 'Not implemented yet'
+
+
+@app.route('/advisor_profile')
+def advisor_profile():
+    return 'Not implemented yet'
+
+
+@app.route('/ongoing_advisee_connections')
+def ongoing_advisee_connections():
+    return 'Not implemented yet'

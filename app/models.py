@@ -3,6 +3,11 @@ from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
+class Match(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    advisee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    advisor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -17,10 +22,10 @@ class User(UserMixin, db.Model):
     o2u = db.relationship('StudentOrgToUser', backref='user', lazy='dynamic')
     c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
     i2u = db.relationship('InterestToUser', backref='user', lazy='dynamic')
-    """
-    advisee_id = db.relationship('Match', backref='user', lazy='dynamic')
-    advisor_id = db.relationship('Match', backref='user', lazy='dynamic')
-    """
+
+    advisees = db.relationship('Match', backref='advisee', lazy='dynamic', primaryjoin=id==Match.advisee_id)
+    advisors = db.relationship('Match', backref='advisor', lazy='dynamic', primaryjoin=id==Match.advisor_id)
+
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -32,10 +37,6 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
 
-class Match(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    advisee_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    advisor_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 
 @login.user_loader
@@ -106,9 +107,10 @@ class InterestToUser(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
 
-class StudentOrg(db.Model):
+class Org(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+    o2u = db.relationship('StudentOrgToUser', backref='org', lazy='dynamic')
 
     def __repr__(self):
         return '<Student Org {}>'.format(self.name)
@@ -116,6 +118,6 @@ class StudentOrg(db.Model):
 
 class StudentOrgToUser(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    org_id = db.Column(db.Integer, db.ForeignKey('studentorg.id'), nullable=False)
+    org_id = db.Column(db.Integer, db.ForeignKey('org.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
