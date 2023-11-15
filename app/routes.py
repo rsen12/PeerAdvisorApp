@@ -1947,14 +1947,14 @@ def reset_db():
 
 
 @app.route('/advisee_form', methods=['GET', 'POST'])
-# @login_required
+@login_required
 def advisee_form():
     form = AdviseeForm()
-    form.student_orgs.choices = [(o.id,o.title) for o in Org.query.all()]
-    form.major.choices = [(m.id, m.title) for m in Major.query.all()]
-    form.primary_advisor.choices = [(p.id, p.title) for p in Professor.query.all()]
-    form.interests.choices = [(i.id, i.title) for i in Interest.query.all()]
-    form.minor.choices = [(m.id, m.title) for m in Major.query.all()]
+    form.student_orgs.choices = [(o.id,o.name) for o in Org.query.all()]
+    form.major.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.primary_advisor.choices = [(p.id, p.name) for p in Professor.query.all()]
+    form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
+    form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
 
     return render_template('advisee_signup_form.html', title='Advisee Form', form=form)
 
