@@ -47,7 +47,7 @@ def load_user(id):
 class Major(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    school = db.Column(db.String(64), unique=True)
+    school = db.Column(db.String(64))
     m2u = db.relationship('MajorToUser', backref='major', lazy='dynamic')
 
     def __repr__(self):
@@ -62,6 +62,7 @@ class MajorToUser(db.Model):
 
 class Course(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    code = db.Column(db.String(32), unique=True)
     name = db.Column(db.String(64), unique=True)
     c2u = db.relationship('CourseToUser', backref='course', lazy='dynamic')
     p2c = db.relationship('ProfessorToCourse', backref='course', lazy='dynamic')
