@@ -2132,7 +2132,7 @@ def advisor_form():
     form.course.choices = [(c.id, c.name) for c in Course.query.all()]
 
     if form.validate_on_submit():
-        advisor = User(username=form.name.data, advisors=form.name.data)
+        advisor = User(username=form.name.data)
         match = Match(advisor_id=advisor.id)
         db.session.add(advisor)
         db.session.add(match)
