@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-5">
+              <img src="{{ advisor.profile_pic }}">
+            </div>
+            <div class="col-md-7">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-info">ONGOING ADVISEES</button>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="button" class="btn btn-info">ADVISEE REQUESTS</button>
+                        </div>
+                    </div>
+                </div>
+                    <div class="row">
+                        <h3><strong>Name: </strong>{{ advisor.username }}</h3>
+                        <h3><strong>Preferred pronouns: </strong>{{ advisor.major }}</h3>
+                        <h3><strong>Major(s): </strong>{{ advisor.major }}</h3>
+                        <h3><strong>Minor(s): </strong>{{ advisor.minor }}</h3>
+                        <h3><strong>Student organization: </strong>{{ advisor.student_org }}</h3>
+                        <h3><strong>Interest(s): </strong>{{ advisor.interest}}</h3>
+                        <h3><strong>Preferred contact method: </strong>{{ advisor.contact }}</h3>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

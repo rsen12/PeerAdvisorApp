@@ -5,6 +5,9 @@ from app import app, db
 from app.models import *
 from app.forms import *
 from werkzeug.urls import *
+from werkzeug.utils import secure_filename
+import uuid as uuid
+import os
 
 
 @app.route('/')
@@ -1960,16 +1963,54 @@ def advisee_form():
     return render_template('advisee_signup_form.html', title='Advisee Form', form=form)
 
 
+@app.route('/advisor_form', methods=['GET', 'POST'])
+@login_required
+def advisor_form():
+    form = AdvisorForm()
+    form.student_orgs.choices = [(o.id,o.name) for o in Org.query.all()]
+    form.major.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.primary_advisor.choices = [(p.id, p.name) for p in Professor.query.all()]
+    form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
+    form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.course.choices = [(c.id, c.name) for c in Course.query.all()]
+    if form.validate_on_submit():
+        advisor = User(username=form.name.data, advisors=form.name.data)
+        file = form.profile_pic.data
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        db.session.add(advisor)
+        db.session.commit()
+        for org_id in form.student_orgs.data:
+            o2u = StudentOrgToUser(org_id=org_id, user_id=form.name.data)
+            db.session.add(o2u)
+            db.session.commit()
+        for major_id in form.major.data:
+            m2u = MajorToUser(major_id=major_id, user_id=form.name.data)
+            db.session.add(m2u)
+            db.session.commit()
+        for interest_id in form.interests.data:
+            i2u = InterestToUser(interest_id=interest_id, user_id=form.name.data)
+            db.session.add(i2u)
+            db.session.commit()
+        for course_id in form.course.data:
+            c2u = CourseToUser(course_id=course_id, user_id=form.name.data)
+            db.session.add(c2u)
+            db.session.commit()
+        flash('Congratulations! You are now a peer advisor, {}'.format(form.name.data))
+    return render_template('advisor_signup_form.html', title='Advisor Form', form=form)
+
+
 @app.route('/advisee_matches')
 def advisee_matches():
     return 'Not implemented yet'
 
 
-@app.route('/advisor_profile')
-def advisor_profile():
-    return 'Not implemented yet'
+@app.route('/advisor_profile/<username>')
+@login_required
+def advisor_profile(username):
+    advisor = User.query.filter_by(username=username).first_or_404()
+    return render_template('advisor_profile.html', title='Advisor Profile', advisor=advisor)
 
 
 @app.route('/ongoing_advisee_connections')
 def ongoing_advisee_connections():
-    return 'Not implemented yet'
+    return render_template('ongoing_connections.html', title='Ongoing Connections')

@@ -2,6 +2,8 @@ from datetime import datetime
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
+from hashlib import md5
+
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,6 +20,7 @@ class User(UserMixin, db.Model):
     internship = db.Column(db.Boolean())
     study_abroad = db.Column(db.Boolean())
     student_research = db.Column(db.Boolean())
+    profile_pic = db.Column(db.String(), nullable=True)
     m2u = db.relationship('MajorToUser', backref='user', lazy='dynamic')
     o2u = db.relationship('StudentOrgToUser', backref='user', lazy='dynamic')
     c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
@@ -25,7 +28,6 @@ class User(UserMixin, db.Model):
 
     advisees = db.relationship('Match', backref='advisee', lazy='dynamic', primaryjoin=id==Match.advisee_id)
     advisors = db.relationship('Match', backref='advisor', lazy='dynamic', primaryjoin=id==Match.advisor_id)
-
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -36,7 +38,10 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
+    def avatar(self, size):
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
+        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
+            digest, size)
 
 
 @login.user_loader
