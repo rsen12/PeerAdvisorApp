@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileField
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import StringField, DateField, SubmitField, PasswordField, BooleanField, SelectMultipleField, SelectField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError
 from app.models import User
@@ -24,7 +24,7 @@ class AdviseeForm(FlaskForm):
 class AdvisorForm(FlaskForm):
     name = StringField('Full Name', validators=[DataRequired()])
     pronouns = StringField('Pronouns')
-    primary_advisor = SelectField('Primary Advisor(s)')
+    primary_advisor = SelectField('Primary Advisor')
     student_orgs = SelectMultipleField('Student Organization(s)', coerce=int)
     interests = SelectMultipleField('Interest(s)', coerce=int)
     preferred_contact_method = SelectField('Preferred Contact Method', choices=[('email', 'Email'), ('text', 'Text')])
@@ -32,10 +32,9 @@ class AdvisorForm(FlaskForm):
     major = SelectMultipleField('Major', validators=[DataRequired()], coerce=int)
     minor = SelectMultipleField('Minor', validators=[DataRequired()], coerce=int)
     course = SelectMultipleField('Course Taken', validators=[DataRequired()], coerce=int)
-    internship = BooleanField('Internship?', validators=[DataRequired()])
-    study_abroad = BooleanField('Study Abroad?', validators=[DataRequired()])
-    research_exp = BooleanField('Research Experience?', validators=[DataRequired()])
-    profile_pic = FileField('Profile Picture', validators=[FileAllowed(['jpg', 'png'], 'Images only!')])
+    internship = BooleanField('Internship?')
+    study_abroad = BooleanField('Study Abroad?')
+    research_exp = BooleanField('Research Experience?')
     submit = SubmitField('Submit')
 
 

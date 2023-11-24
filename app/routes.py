@@ -2131,9 +2131,9 @@ def advisor_form():
     form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
     form.course.choices = [(c.id, c.name) for c in Course.query.all()]
     if form.validate_on_submit():
-        advisor = User(username=form.name.data, advisors=form.name.data)
-        file = form.profile_pic.data
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename)))
+        user = User(username=form.name.data)
+        advisor = Match(advisor_id=form.name.data)
+        db.session.add(user)
         db.session.add(advisor)
         db.session.commit()
         for org_id in form.student_orgs.data:
@@ -2153,6 +2153,7 @@ def advisor_form():
             db.session.add(c2u)
             db.session.commit()
         flash('Congratulations! You are now a peer advisor, {}'.format(form.name.data))
+        return redirect(url_for('advisor_profile', username=form.name.data))
     return render_template('advisor_signup_form.html', title='Advisor Form', form=form)
 
 
@@ -2208,13 +2209,6 @@ def advisee_matches():
 def advisor_profile(username):
     advisor = User.query.filter_by(username=username).first_or_404()
     return render_template('advisor_profile.html', title='Advisor Profile', advisor=advisor)
-
-
-@app.route('/advisor_form')
-def advisor_form():
-    if current_user.m2u[0] != None:
-        return redirect(url_for('advisor_profile'))
-    return 'Not implemented yet'
 
 
 @app.route('/ongoing_advisee_connections')

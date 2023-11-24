@@ -15,7 +15,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 bootstrap = Bootstrap(app)
-UPLOAD_FOLDER = 'static/images/'
+UPLOAD_FOLDER = 'app/static/images'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 if not app.debug:

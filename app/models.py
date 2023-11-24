@@ -20,7 +20,6 @@ class User(UserMixin, db.Model):
     internship = db.Column(db.Boolean())
     study_abroad = db.Column(db.Boolean())
     student_research = db.Column(db.Boolean())
-    profile_pic = db.Column(db.String(), nullable=True)
     m2u = db.relationship('MajorToUser', backref='user', lazy='dynamic')
     o2u = db.relationship('StudentOrgToUser', backref='user', lazy='dynamic')
     c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
