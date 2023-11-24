@@ -2213,13 +2213,6 @@ def advisor_profile(username):
     return render_template('advisor_profile.html', title='Advisor Profile', advisor=advisor)
 
 
-@app.route('/advisor_form')
-def advisor_form():
-    if current_user.m2u[0] != None:
-        return redirect(url_for('advisor_profile'))
-    return 'Not implemented yet'
-
-
 @app.route('/ongoing_advisee_connections')
 def ongoing_advisee_connections():
     return render_template('ongoing_connections.html', title='Ongoing Connections')
