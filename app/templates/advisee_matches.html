@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    {% for user in advisor_list %}
+        {{ user }}<br>
+    {% endfor %}
+{% endblock %}
