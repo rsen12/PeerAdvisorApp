@@ -2130,11 +2130,12 @@ def advisor_form():
     form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
     form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
     form.course.choices = [(c.id, c.name) for c in Course.query.all()]
+
     if form.validate_on_submit():
-        user = User(username=form.name.data)
-        advisor = Match(advisor_id=form.name.data)
-        db.session.add(user)
+        advisor = User(username=form.name.data, advisors=form.name.data)
+        match = Match(advisor_id=advisor.id)
         db.session.add(advisor)
+        db.session.add(match)
         db.session.commit()
         for org_id in form.student_orgs.data:
             o2u = StudentOrgToUser(org_id=org_id, user_id=form.name.data)
