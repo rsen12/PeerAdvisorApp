@@ -22,6 +22,7 @@ class User(UserMixin, db.Model):
     o2u = db.relationship('StudentOrgToUser', backref='user', lazy='dynamic')
     c2u = db.relationship('CourseToUser', backref='user', lazy='dynamic')
     i2u = db.relationship('InterestToUser', backref='user', lazy='dynamic')
+    primary_advisor = db.Column(db.Integer, db.ForeignKey('professor.id'))
 
     advisees = db.relationship('Match', backref='advisee', lazy='dynamic', primaryjoin=id==Match.advisee_id)
     advisors = db.relationship('Match', backref='advisor', lazy='dynamic', primaryjoin=id==Match.advisor_id)
@@ -82,6 +83,8 @@ class Professor(db.Model):
     name = db.Column(db.String(64), unique=True)
     department = db.Column(db.String(64))
     p2c = db.relationship('ProfessorToCourse', backref='professor', lazy='dynamic')
+
+    user = db.relationship('User', backref='professor', lazy='dynamic')
 
     def __repr__(self):
         return '<Professor {}>'.format(self.name)

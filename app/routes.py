@@ -1944,6 +1944,134 @@ def reset_db():
         db.session.add(match_join)
         db.session.commit()
 
+    interest_json = [
+      {
+        "id": 1,
+        "name": "Reading"
+      },
+      {
+        "id": 2,
+        "name": "Writing"
+      },
+      {
+        "id": 3,
+        "name": "Photography"
+      },
+      {
+        "id": 4,
+        "name": "Painting/Drawing"
+      },
+      {
+        "id": 5,
+        "name": "Music"
+      },
+      {
+        "id": 6,
+        "name": "Hiking"
+      },
+      {
+        "id": 7,
+        "name": "Gaming"
+      },
+      {
+        "id": 8,
+        "name": "Cooking/Baking"
+      },
+      {
+        "id": 9,
+        "name": "Yoga/Fitness"
+      },
+      {
+        "id": 10,
+        "name": "Dancing"
+      },
+      {
+        "id": 11,
+        "name": "Gardening"
+      },
+      {
+        "id": 12,
+        "name": "Coding/Programming"
+      },
+      {
+        "id": 13,
+        "name": "Film/TV Series"
+      },
+      {
+        "id": 14,
+        "name": "Podcasting"
+      },
+      {
+        "id": 15,
+        "name": "Traveling"
+      },
+      {
+        "id": 16,
+        "name": "Graphic Design"
+      },
+      {
+        "id": 17,
+        "name": "Volunteering"
+      },
+      {
+        "id": 18,
+        "name": "Meditation"
+      },
+      {
+        "id": 19,
+        "name": "Language Learning"
+      },
+      {
+        "id": 20,
+        "name": "Collecting"
+      },
+      {
+        "id": 21,
+        "name": "DIY Crafts"
+      },
+      {
+        "id": 22,
+        "name": "Cycling"
+      },
+      {
+        "id": 23,
+        "name": "Running"
+      },
+      {
+        "id": 24,
+        "name": "Astronomy"
+      },
+      {
+        "id": 25,
+        "name": "Fashion Design"
+      },
+      {
+        "id": 26,
+        "name": "Fishing"
+      },
+      {
+        "id": 27,
+        "name": "Chess/Board Games"
+      },
+      {
+        "id": 28,
+        "name": "Rock Climbing"
+      },
+      {
+        "id": 29,
+        "name": "Astrophotography"
+      },
+      {
+        "id": 30,
+        "name": "Bird Watching"
+      }
+    ]
+
+    for each_element in interest_json:
+        interest = Interest(id=each_element["id"], name=each_element["name"])
+        db.session.add(interest)
+        db.session.commit()
+
     return render_template('index.html', title='Home')
 
 
@@ -1955,18 +2083,96 @@ def advisee_form():
     form.major.choices = [(m.id, m.name) for m in Major.query.all()]
     form.primary_advisor.choices = [(p.id, p.name) for p in Professor.query.all()]
     form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
-    form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.courses.choices = [(c.id, c.name) for c in Course.query.all()]
 
+    if form.validate_on_submit():
+        user = current_user
+        user.pronouns = form.pronouns.data
+        user.class_year = form.class_year.data
+        user.internship = form.internship.data
+        user.study_abroad = form.study_abroad.data
+        user.student_research = form.student_research.data
+
+        for each_major_id in form.major.data:
+            major_join = MajorToUser(major_id=each_major_id, user_id=user.id)
+            db.session.add(major_join)
+            db.session.commit()
+        for each_org_id in form.student_orgs.data:
+            org_join = StudentOrgToUser(org_id=each_org_id, user_id=user.id)
+            db.session.add(org_join)
+            db.session.commit()
+        for each_course_id in form.courses.data:
+            course_join = CourseToUser(course_id=each_course_id, user_id=user.id)
+            db.session.add(course_join)
+            db.session.commit()
+        for each_course_id in form.student_orgs.data:
+            course_join = CourseToUser(course_id=each_course_id, user_id=user.id)
+            db.session.add(course_join)
+            db.session.commit()
+        for each_prof_id in form.primary_advisor.data:
+            user.primary_advisor_id = each_prof_id
+            db.session.commit()
+
+        return redirect(url_for('advisee_matches'))
     return render_template('advisee_signup_form.html', title='Advisee Form', form=form)
 
 
 @app.route('/advisee_matches')
 def advisee_matches():
-    return 'Not implemented yet'
+    advisor_list = User.query.join(Match, User.id == Match.advisor_id).filter(Match.advisor_id.isnot(None)).all()
+    user = current_user
+
+    for each_advisor in advisor_list:
+        score = 0
+
+        for each_major in user.m2u:
+            for each_advisor_major in each_advisor.m2u:
+                if each_major == each_advisor_major:
+                    score += 1
+
+        if user.primary_advisor == each_advisor.primary_advisor:
+            score += 1
+
+        for each_org in user.o2u:
+            for each_advisor_org in each_advisor.o2u:
+                if each_org == each_advisor_org:
+                    score += 1
+
+        for each_interest in user.i2u:
+            for each_advisor_interest in each_advisor.i2u:
+                if each_interest == each_advisor_interest:
+                    score += 1
+
+        if user.internship == each_advisor.internship:
+            score += 1
+
+        if user.study_abroad == each_advisor.study_abroad:
+            score += 1
+
+        if user.student_research == each_advisor.student_research:
+            score += 1
+
+        for each_course in user.c2u:
+            for each_advisor_course in each_advisor.c2u:
+                if each_course == each_advisor_course:
+                    score += 1
+
+        each_advisor.score = score
+
+    sorted_list = sorted(advisor_list, key=lambda x: x.score)
+
+    return render_template('advisee_matches.html', advisor_list=sorted_list)
 
 
 @app.route('/advisor_profile')
 def advisor_profile():
+    return 'Not implemented yet'
+
+
+@app.route('/advisor_form')
+def advisor_form():
+    if current_user.m2u[0] != None:
+        return redirect(url_for('advisor_profile'))
     return 'Not implemented yet'
 
 

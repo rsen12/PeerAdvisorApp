@@ -70,15 +70,15 @@
         </p>
 
         <p>
-            {{ form.minor.label }}<br>
-            {{ form.minor() }}<br>
-            {% for error in form.minor.errors %}
+            {{ form.courses.label }}<br>
+            {{ form.courses() }}<br>
+            {% for error in form.courses.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
 
         <p>
-            {{ form.internship.label }}<br>
+            {{ form.internship.label }}&emsp;
             {{ form.internship() }}<br>
             {% for error in form.internship.errors %}
                 <span style="color: red;">[{{ error }}]</span>
@@ -86,7 +86,7 @@
         </p>
 
         <p>
-            {{ form.study_abroad.label }}<br>
+            {{ form.study_abroad.label }}&emsp;
             {{ form.study_abroad() }}<br>
             {% for error in form.study_abroad.errors %}
                 <span style="color: red;">[{{ error }}]</span>
@@ -94,9 +94,9 @@
         </p>
 
         <p>
-            {{ form.research_exp.label }}<br>
-            {{ form.research_exp() }}<br>
-            {% for error in form.research_exp.errors %}
+            {{ form.student_research.label }}&emsp;
+            {{ form.student_research() }}<br>
+            {% for error in form.student_research.errors %}
                 <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p>
