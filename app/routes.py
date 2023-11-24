@@ -2213,5 +2213,6 @@ def advisor_profile(username):
 
 
 @app.route('/ongoing_advisee_connections')
+@login_required
 def ongoing_advisee_connections():
     return render_template('ongoing_connections.html', title='Ongoing Connections')
