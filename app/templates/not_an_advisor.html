@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Hi @{{ user.username }}</h1>
+    <h2>You are not currently an advisor, and therefore do not have access to this page.</h2>
+    <h2>However, we are always looking for more advisors to help guide students. Sign up below!</h2>
+    <a href="{{ url_for('advisor_form') }}" type="button" class="btn btn-primary btn-lg" >Become An Advisor!</a>
+{% endblock %}

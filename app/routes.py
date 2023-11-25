@@ -1777,7 +1777,7 @@ def reset_db():
             "id": 1,
             "username": "alice.apple",
             "email": "alice.apple@example.com",
-            "class_year": "freshman",
+            "class_year": 2027,
             "internship": True,
             "study_abroad": False,
             "student_research": True
@@ -1786,7 +1786,7 @@ def reset_db():
             "id": 2,
             "username": "betty.blueberry",
             "email": "betty.blueberry@example.com",
-            "class_year": "sophomore",
+            "class_year": 2026,
             "internship": False,
             "study_abroad": True,
             "student_research": False
@@ -1795,7 +1795,7 @@ def reset_db():
             "id": 3,
             "username": "charlie.cheese",
             "email": "charlie.cheese@example.com",
-            "class_year": "junior",
+            "class_year": 2024,
             "internship": True,
             "study_abroad": True,
             "student_research": True
@@ -1804,7 +1804,7 @@ def reset_db():
             "id": 4,
             "username": "danny.doughnut",
             "email": "danny.doughnut@example.com",
-            "class_year": "sophomore",
+            "class_year": 2026,
             "internship": False,
             "study_abroad": False,
             "student_research": False
@@ -1813,7 +1813,7 @@ def reset_db():
             "id": 5,
             "username": "eve.eggplant",
             "email": "eve.eggplant@example.com",
-            "class_year": "senior",
+            "class_year": 2024,
             "internship": True,
             "study_abroad": True,
             "student_research": False
@@ -1822,7 +1822,7 @@ def reset_db():
             "id": 6,
             "username": "frank.figs",
             "email": "frank.figs@example.com",
-            "class_year": "senior",
+            "class_year": 2024,
             "internship": False,
             "study_abroad": True,
             "student_research": True
@@ -1831,7 +1831,7 @@ def reset_db():
             "id": 7,
             "username": "gina.grapefruit",
             "email": "gina.grapefruit@example.com",
-            "class_year": "junior",
+            "class_year": 2025,
             "internship": True,
             "study_abroad": False,
             "student_research": True
@@ -1840,7 +1840,7 @@ def reset_db():
             "id": 8,
             "username": "henry.honeydew",
             "email": "henry.honeydew@example.com",
-            "class_year": "sophomore",
+            "class_year": 2026,
             "internship": False,
             "study_abroad": True,
             "student_research": False
@@ -1849,7 +1849,7 @@ def reset_db():
             "id": 9,
             "username": "ivy.icecream",
             "email": "ivy.icecream@example.com",
-            "class_year": "first-year",
+            "class_year": 2026,
             "internship": True,
             "study_abroad": False,
             "student_research": True
@@ -1858,7 +1858,7 @@ def reset_db():
             "id": 10,
             "username": "jack.jalapeno",
             "email": "jack.jalapeno@example.com",
-            "class_year": "sophomore",
+            "class_year": 2024,
             "internship": True,
             "study_abroad": True,
             "student_research": False
@@ -1867,7 +1867,7 @@ def reset_db():
             "id": 11,
             "username": "kate.kiwi",
             "email": "kate.kiwi@example.com",
-            "class_year": "senior",
+            "class_year": 2025,
             "internship": False,
             "study_abroad": False,
             "student_research": True
@@ -1876,7 +1876,7 @@ def reset_db():
             "id": 12,
             "username": "leo.lemon",
             "email": "leo.lemon@example.com",
-            "class_year": "first-year",
+            "class_year": 2027,
             "internship": True,
             "study_abroad": True,
             "student_research": False
@@ -1885,7 +1885,7 @@ def reset_db():
             "id": 13,
             "username": "maria.mango",
             "email": "maria.mango@example.com",
-            "class_year": "junior",
+            "class_year": 2025,
             "internship": True,
             "study_abroad": False,
             "student_research": False
@@ -1894,7 +1894,7 @@ def reset_db():
             "id": 14,
             "username": "nick.nectarine",
             "email": "nick.nectarine@example.com",
-            "class_year": "sophomore",
+            "class_year": 2025,
             "internship": False,
             "study_abroad": True,
             "student_research": True
@@ -1903,7 +1903,7 @@ def reset_db():
             "id": 15,
             "username": "olivia.orange",
             "email": "olivia.orange@example.com",
-            "class_year": "senior",
+            "class_year": 2026,
             "internship": True,
             "study_abroad": True,
             "student_research": False
@@ -2131,30 +2131,31 @@ def advisor_form():
     form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
     form.course.choices = [(c.id, c.name) for c in Course.query.all()]
 
+    user = current_user
+
     if form.validate_on_submit():
-        advisor = User(username=form.name.data)
-        match = Match(advisor_id=advisor.id)
-        db.session.add(advisor)
+        match = Match(advisor_id=user.id)
         db.session.add(match)
         db.session.commit()
+
         for org_id in form.student_orgs.data:
-            o2u = StudentOrgToUser(org_id=org_id, user_id=form.name.data)
+            o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)
             db.session.add(o2u)
             db.session.commit()
         for major_id in form.major.data:
-            m2u = MajorToUser(major_id=major_id, user_id=form.name.data)
+            m2u = MajorToUser(major_id=major_id, user_id=user.id)
             db.session.add(m2u)
             db.session.commit()
         for interest_id in form.interests.data:
-            i2u = InterestToUser(interest_id=interest_id, user_id=form.name.data)
+            i2u = InterestToUser(interest_id=interest_id, user_id=user.id)
             db.session.add(i2u)
             db.session.commit()
         for course_id in form.course.data:
-            c2u = CourseToUser(course_id=course_id, user_id=form.name.data)
+            c2u = CourseToUser(course_id=course_id, user_id=user.id)
             db.session.add(c2u)
             db.session.commit()
         flash('Congratulations! You are now a peer advisor, {}'.format(form.name.data))
-        return redirect(url_for('advisor_profile', username=form.name.data))
+        return redirect(url_for('advisor_profile', username=current_user.username))
     return render_template('advisor_signup_form.html', title='Advisor Form', form=form)
 
 
@@ -2208,6 +2209,8 @@ def advisee_matches():
 @app.route('/advisor_profile/<username>')
 @login_required
 def advisor_profile(username):
+    if len(Match.query.filter_by(advisor_id=current_user.id)) == 0:
+        return redirect('not_an_advisor', user=current_user)
     advisor = User.query.filter_by(username=username).first_or_404()
     return render_template('advisor_profile.html', title='Advisor Profile', advisor=advisor)
 
