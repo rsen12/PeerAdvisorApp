@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <br><h1>Your Advisor Matches</h1><br>
+    <br><h1>{{ title }}</h1><br>
     <div class="container">
       <div class="row row-cols-1 row-cols-md-3 gap-3"> <!-- Use row-cols-md-3 for 3 columns and gap-3 for a 16px gap -->
-        {% for user in advisor_list %}
+        {% for user in advisee_list %}
           <div class="col mb-4">
             <div class="card" style="width: 16rem;">
               <img src="{{user.avatar(400)}}" class="card-img-top" alt="...">
@@ -12,7 +12,7 @@
                 <h5 class="card-title">{{ user.username }}</h5>
                 <p class="card-text">Major: {{ user.m2u.first().major.name }}</p>
                 <p class="card-text">Class Year: {{ user.class_year }}</p>
-                <a href="#" class="btn btn-primary" id="myButton" onclick="handleButtonClick({{ user.id }})">Make connection</a>
+                <a href="#" class="btn btn-primary">Make connection</a>
               </div>
             </div>
           </div>
@@ -20,27 +20,31 @@
       </div>
     </div>
 
-
-
     <div id="myModal" class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Your Advisor Matches!</h5>
+            <h5 class="modal-title">{{ title }}</h5>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
           <div class="modal-body">
-            <p>The advisors on this page are ranked by how good of a match they are to your profile. Click on "Make Connection" to
-            be able to chat with your advisor!</p>
+              <h4>Your Role as an Advisor:</h4>
+            <ul>
+              <li>To give close-to-home advice to students on classes, clubs, internships and other aspects of student life from a student’s perspective.</li>
+              <li>To talk through registration (including social engagements, clubs and sports) to make sure their schedules are truly feasible for students, and that they ensure student wellbeing.</li>
+              <li>To aid students in figuring out concentrations and particular sub-disciplines pertaining to their majors and potential life pathways.</li>
+              <li>To connect students with other departments on campus to promote interdisciplinary and holistic growth.</li>
+            </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
-    </div>
+</div>
+
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
@@ -53,7 +57,7 @@
       $(document).ready(function () {
         $('.card').hover(
           function () {
-            $(this).css('background-color', '#c2e4d8');
+            $(this).css('background-color', '#FFB6C1');
           },
           function () {
             $(this).css('background-color', '');
@@ -61,14 +65,5 @@
         );
       });
     </script>
-
-    <script>
-      function handleButtonClick(userId) {
-        var redirectUrl = "/make_connection_for_" + userId;
-
-        window.location.href = redirectUrl;
-      }
-    </script>
-
 
 {% endblock %}

@@ -2070,9 +2070,67 @@ def reset_db():
       }
     ]
 
+    m2u_json = [
+      {
+        "id": 1,
+        "major_id": 19,
+        "user_id": 6
+      },
+      {
+        "id": 2,
+        "major_id": 21,
+        "user_id": 7
+      },
+      {
+        "id": 3,
+        "major_id": 14,
+        "user_id": 8
+      },
+      {
+        "id": 4,
+        "major_id": 15,
+        "user_id": 9
+      },
+      {
+        "id": 5,
+        "major_id": 16,
+        "user_id": 10
+      },
+      {
+        "id": 6,
+        "major_id": 5,
+        "user_id": 11
+      },
+      {
+        "id": 7,
+        "major_id": 6,
+        "user_id": 12
+      },
+      {
+        "id": 8,
+        "major_id": 5,
+        "user_id": 13
+      },
+      {
+        "id": 9,
+        "major_id": 15,
+        "user_id": 14
+      },
+      {
+        "id": 10,
+        "major_id": 3,
+        "user_id": 15
+      }
+    ]
+
     for each_element in interest_json:
         interest = Interest(id=each_element["id"], name=each_element["name"])
         db.session.add(interest)
+        db.session.commit()
+
+    for each_element in m2u_json:
+        m2u = MajorToUser(id=each_element["id"], major_id=each_element["major_id"], user_id=each_element["user_id"])
+        db.session.add(m2u)
         db.session.commit()
 
     return render_template('index.html', title='Home')
@@ -2137,6 +2195,8 @@ def advisor_form():
         match = Match(advisor_id=user.id)
         db.session.add(match)
         db.session.commit()
+        user.pronouns = form.pronouns.data
+        user.preferred_contact_method = form.preferred_contact_method.data
 
         for org_id in form.student_orgs.data:
             o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)
@@ -2219,4 +2279,37 @@ def advisor_profile(username):
 @app.route('/ongoing_advisee_connections')
 @login_required
 def ongoing_advisee_connections():
-    return render_template('ongoing_connections.html', title='Ongoing Connections')
+    list1 = Match.query.filter_by(advisor_id=current_user.id).all()
+    if len(list1) == 0:
+        return render_template('not_an_advisor.html', user=current_user)
+
+    match_list = Match.query.filter_by(advisor_id=current_user.id).all()
+
+    advisee_list = []
+    for each_match in match_list:
+        advisee = User.query.get(each_match.advisee_id)
+        if advisee is not None:
+            advisee_list.append(advisee)
+
+    return render_template('ongoing_connection.html', title='Ongoing Connections', advisee_list=advisee_list)
+
+
+@app.route('/make_connection_for_<userID>')
+@login_required
+def make_connection(userID):
+    match = Match(advisee_id=current_user.id, advisor_id=userID)
+    db.session.add(match)
+    db.session.commit()
+
+    return redirect(url_for('ongoing_advisors'))
+
+
+@app.route('/ongoing_advisors')
+@login_required
+def ongoing_advisors():
+    match_list = Match.query.filter_by(advisee_id=current_user.id).all()
+    advisor_list = []
+    for each_match in match_list:
+        advisor_list.append(User.query.get_or_404(each_match.advisor_id))
+
+    return render_template('ongoing_advisors.html', advisor_list=advisor_list, title='Your Advisors')
