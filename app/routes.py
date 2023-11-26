@@ -1,5 +1,5 @@
 import csv
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import current_user, login_user, logout_user, login_required
 from app import app, db
 from app.models import *
@@ -2209,8 +2209,9 @@ def advisee_matches():
 @app.route('/advisor_profile/<username>')
 @login_required
 def advisor_profile(username):
-    if len(Match.query.filter_by(advisor_id=current_user.id)) == 0:
-        return redirect('not_an_advisor', user=current_user)
+    list1 = Match.query.filter_by(advisor_id=current_user.id).all()
+    if len(list1) == 0:
+        return render_template('not_an_advisor.html', user=current_user)
     advisor = User.query.filter_by(username=username).first_or_404()
     return render_template('advisor_profile.html', title='Advisor Profile', advisor=advisor)
 
