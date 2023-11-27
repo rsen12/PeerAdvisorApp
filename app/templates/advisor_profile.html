@@ -3,32 +3,54 @@
 
 {% block app_content %}
     <div class="container">
-        <div class="row">
+        <div class="row mb-4">
             <div class="col-md-5">
-              <img src="{{ current_user.avatar(384) }}">
+                <img src="{{ current_user.avatar(384) }}" class="img-fluid">
             </div>
             <div class="col-md-7">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <a class="btn btn-info" href="http://127.0.0.1:5000/ongoing_advisee_connections" role="button">ONGOING ADVISEES</a>
-                        </div>
-                        <div class="col-md-3">
-                            <a class="btn btn-info" href="http://127.0.0.1:5000/ongoing_advisee_connections" role="button">ADVISEE REQUESTS</a>
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <a class="btn btn-info btn-block" href="{{ url_for('ongoing_advisee_connections') }}" role="button">ONGOING ADVISEES</a>
                         </div>
                     </div>
                 </div>
-                    <div class="row">
-                        <h3><strong>Name: </strong>{{ advisor.username }}</h3><br>
-                        <h3><strong>Preferred pronouns: </strong>{{ advisor.pronouns }}</h3><br>
-                        <h3><strong>Major(s): </strong>{{ advisor.major }}</h3><br>
-                        <h3><strong>Minor(s): </strong>{{ advisor.minor }}</h3><br>
-                        <h3><strong>Student organization: </strong>{{ advisor.student_orgs }}</h3><br>
-                        <h3><strong>Interest(s): </strong>{{ advisor.interests }}</h3><br>
-                        <h3><strong>Preferred contact method: </strong>{{ advisor.preferred_contact_method }}</h3><br>
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <p><b>Username</b>: @{{ advisor.username }}</p>
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <p style="font-weight: bold;">Preferred pronouns: {{ advisor.pronouns }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p style="font-weight: bold;">Major(s):</p>
+                            <ul>
+                              {% for major in advisor.m2u %}
+                                <li>{{ major.major.name }}</li>
+                              {% endfor %}
+                            </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p style="font-weight: bold;">Student Orgs:</p>
+                            <ul>
+                              {% for org in advisor.o2u %}
+                                <li>{{ org.org.name }}</li>
+                              {% endfor %}
+                            </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p style="font-weight: bold;">Interests:</p>
+                            <ul>
+                              {% for interest in advisor.i2u %}
+                                <li>{{ interest.interest.name }}</li>
+                              {% endfor %}
+                            </ul>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p style="font-weight: bold;">Preferred contact method: {{ advisor.preferred_contact_method }}</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
 {% endblock %}

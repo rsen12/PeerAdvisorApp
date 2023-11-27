@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <br><h1>{{ title }}</h1><br>
+    <div class="container">
+      <div class="row row-cols-1 row-cols-md-3 gap-3">
+        {% for user in advisor_list %}
+          <div class="col mb-4">
+            <div class="card" style="width: 16rem;">
+              <img src="{{user.avatar(400)}}" class="card-img-top" alt="...">
+              <div class="card-body">
+                <h5 class="card-title">{{ user.username }}</h5>
+                <p class="card-text">Major: {{ user.m2u.first().major.name }}</p>
+                <p class="card-text">Contact them here: {{ user.email }}</p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+{% endblock %}
