@@ -2262,6 +2262,15 @@ def advisee_matches():
         each_advisor.score = score
 
     sorted_list = sorted(advisor_list, key=lambda x: x.score)
+    sorted_list.remove(current_user)
+
+    # removes all the possible users that you've already matched with
+    match_list = Match.query.filter_by(advisee_id=current_user.id).all()
+    temp_list = []
+    for each_match in match_list:
+        temp_list.append(User.query.get_or_404(each_match.advisor_id))
+    for each_advisor in temp_list:
+        sorted_list.remove(each_advisor)
 
     return render_template('advisee_matches.html', advisor_list=sorted_list)
 
@@ -2288,7 +2297,7 @@ def ongoing_advisee_connections():
     advisee_list = []
     for each_match in match_list:
         advisee = User.query.get(each_match.advisee_id)
-        if advisee is not None:
+        if advisee is not None and advisee is not current_user:
             advisee_list.append(advisee)
 
     return render_template('ongoing_connection.html', title='Ongoing Connections', advisee_list=advisee_list)

@@ -1,14 +1,19 @@
 {% extends "base.html" %}
 
 {% block app_content %}
-    <div>
-        <h1>Peer Advisor Recommender</h1>
-        <h3>Find the advisor for you!</h3>
+    <div style="display: flex;">
+        <div style="flex: 1;">
+            <a data-flickr-embed="true" href="https://www.flickr.com/gp/199539179@N07/c29212061q" title="COMP 205">
+                <img src="https://live.staticflickr.com/65535/53335595577_e41860e1a2_z.jpg" width="640" height="480" alt="COMP 205"/>
+            </a>
+            <script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
+        </div>
+        <div style="flex: 1; padding: 20px;">
+            <h1>Peer Advisor Recommender</h1>
+            <h3>Find the advisor for you!</h3>
+            <br>
+            <a href="{{ url_for('advisee_form') }}" type="button" class="btn btn-primary btn-lg">Find An Advisor!</a>
+            <a href="{{ url_for('advisor_form') }}" type="button" class="btn btn-primary btn-lg">Become An Advisor!</a>
+        </div>
     </div>
-    <br>
-    <a data-flickr-embed="true" href="https://www.flickr.com/gp/199539179@N07/c29212061q" title="COMP 205"><img src="https://live.staticflickr.com/65535/53335595577_e41860e1a2_z.jpg" width="640" height="480" alt="COMP 205"/></a><script async src="//embedr.flickr.com/assets/client-code.js" charset="utf-8"></script>
-
-    <a href="{{ url_for('advisee_form') }}" type="button" class="btn btn-primary btn-lg" >Find An Advisor!</a>
-    <a href="{{ url_for('advisor_form') }}" type="button" class="btn btn-primary btn-lg" >Become An Advisor!</a>
-
 {% endblock %}
