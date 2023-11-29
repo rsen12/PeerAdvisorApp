@@ -2,6 +2,7 @@
 
 {% block app_content %}
     <br><h1>{{ title }}</h1><br>
+      {% if not no_advisee %}
     <div class="container">
       <div class="row row-cols-1 row-cols-md-3 gap-3"> <!-- Use row-cols-md-3 for 3 columns and gap-3 for a 16px gap -->
         {% for user in advisee_list %}
@@ -17,8 +18,15 @@
             </div>
           </div>
         {% endfor %}
+
       </div>
     </div>
+    {% else %}
+        <h3>Hi!</h3>
+            <p>You currently have no advisees.
+            Check back here to see who matches with you!</p><br>
+            <a href="{{ url_for('index') }}" type="button" class="btn btn-primary btn-lg" >Back to Home!</a>
+      {% endif %}
 
     <div id="myModal" class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
