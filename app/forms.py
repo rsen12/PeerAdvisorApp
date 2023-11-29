@@ -34,7 +34,7 @@ class AdvisorForm(FlaskForm):
     course = SelectMultipleField('Course Taken', validators=[DataRequired()], coerce=int)
     internship = BooleanField('Internship?')
     study_abroad = BooleanField('Study Abroad?')
-    research_exp = BooleanField('Research Experience?')
+    student_research = BooleanField('Research Experience?')
     submit = SubmitField('Submit')
 
 

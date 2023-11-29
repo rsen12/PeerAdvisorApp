@@ -2189,13 +2189,16 @@ def advisor_form():
     form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
     form.course.choices = [(c.id, c.name) for c in Course.query.all()]
 
-    user = current_user
-
     if form.validate_on_submit():
+        user = current_user
+        user.pronouns = form.pronouns.data
+        user.class_year = form.class_year.data
+        user.internship = form.internship.data
+        user.study_abroad = form.study_abroad.data
+        user.student_research = form.student_research.data
         match = Match(advisor_id=user.id)
         db.session.add(match)
         db.session.commit()
-        user.pronouns = form.pronouns.data
         # user.preferred_contact_method = form.preferred_contact_method.data
 
         for org_id in form.student_orgs.data:
@@ -2215,7 +2218,7 @@ def advisor_form():
             db.session.add(c2u)
             db.session.commit()
         flash('Congratulations! You are now a peer advisor, {}'.format(form.name.data))
-        return redirect(url_for('advisor_profile', username=current_user.username))
+        return redirect(url_for('advisor_profile', username=user.username))
     return render_template('advisor_signup_form.html', title='Advisor Form', form=form)
 
 
