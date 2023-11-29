@@ -2196,7 +2196,7 @@ def advisor_form():
         db.session.add(match)
         db.session.commit()
         user.pronouns = form.pronouns.data
-        user.preferred_contact_method = form.preferred_contact_method.data
+        # user.preferred_contact_method = form.preferred_contact_method.data
 
         for org_id in form.student_orgs.data:
             o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)
@@ -2262,7 +2262,8 @@ def advisee_matches():
         each_advisor.score = score
 
     sorted_list = sorted(advisor_list, key=lambda x: x.score)
-    sorted_list.remove(current_user)
+    if current_user in sorted_list:
+        sorted_list.remove(current_user)
 
     # removes all the possible users that you've already matched with
     match_list = Match.query.filter_by(advisee_id=current_user.id).all()
@@ -2300,7 +2301,10 @@ def ongoing_advisee_connections():
         if advisee is not None and advisee is not current_user:
             advisee_list.append(advisee)
 
-    return render_template('ongoing_connection.html', title='Ongoing Connections', advisee_list=advisee_list)
+    if len(advisee_list) == 0:
+        no_advisee = True
+
+    return render_template('ongoing_connection.html', title='Ongoing Connections', advisee_list=advisee_list, no_advisee=no_advisee)
 
 
 @app.route('/make_connection_for_<userID>')
