@@ -2196,7 +2196,7 @@ def advisor_form():
         db.session.add(match)
         db.session.commit()
         user.pronouns = form.pronouns.data
-        user.preferred_contact_method = form.preferred_contact_method.data
+        #user.preferred_contact_method = form.preferred_contact_method.data
 
         for org_id in form.student_orgs.data:
             o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)
@@ -2215,7 +2215,7 @@ def advisor_form():
             db.session.add(c2u)
             db.session.commit()
         flash('Congratulations! You are now a peer advisor, {}'.format(form.name.data))
-        return redirect(url_for('advisor_profile', username=current_user.username))
+        return redirect(url_for('advisor_profile', username=user.username))
     return render_template('advisor_signup_form.html', title='Advisor Form', form=form)
 
 
