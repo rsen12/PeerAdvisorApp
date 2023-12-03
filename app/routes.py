@@ -2230,7 +2230,7 @@ def advisee_matches():
         for each_major in user.m2u:
             for each_advisor_major in each_advisor.m2u:
                 if each_major == each_advisor_major:
-                    score += 1
+                    score += 2
 
         if user.primary_advisor == each_advisor.primary_advisor:
             score += 1
@@ -2261,7 +2261,7 @@ def advisee_matches():
 
         each_advisor.score = score
 
-    sorted_list = sorted(advisor_list, key=lambda x: x.score)
+    sorted_list = sorted(advisor_list, key=lambda x: x.score, reverse=False)
     if current_user in sorted_list:
         sorted_list.remove(current_user)
 
