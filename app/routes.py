@@ -2229,42 +2229,52 @@ def advisee_matches():
 
     for each_advisor in advisor_list:
         score = 0
+        reasons = []
 
         for each_major in user.m2u:
             for each_advisor_major in each_advisor.m2u:
                 if each_major == each_advisor_major:
                     score += 2
+                    reasons.append("Major")
 
         if user.primary_advisor == each_advisor.primary_advisor:
             score += 1
+            reasons.append("Primary advisor")
 
         for each_org in user.o2u:
             for each_advisor_org in each_advisor.o2u:
                 if each_org == each_advisor_org:
                     score += 1
+                    reasons.append("Student organization")
 
         for each_interest in user.i2u:
             for each_advisor_interest in each_advisor.i2u:
                 if each_interest == each_advisor_interest:
                     score += 1
+                    reasons.append("Interest")
 
         if user.internship == each_advisor.internship:
             score += 1
+            reasons.append("Has completed internship")
 
         if user.study_abroad == each_advisor.study_abroad:
             score += 1
+            reasons.append("Has studied abroad")
 
         if user.student_research == each_advisor.student_research:
             score += 1
+            reasons.append("Has completed student research")
 
         for each_course in user.c2u:
             for each_advisor_course in each_advisor.c2u:
                 if each_course == each_advisor_course:
                     score += 1
+                    reasons.append("Has taken similar courses")
 
         each_advisor.score = score
+        each_advisor.reasons = reasons
 
-    sorted_list = sorted(advisor_list, key=lambda x: x.score, reverse=False)
+    sorted_list = sorted(advisor_list, key=lambda x: x.score, reverse=True)
     if current_user in sorted_list:
         sorted_list.remove(current_user)
 
