@@ -6,13 +6,16 @@
       <div class="row row-cols-1 row-cols-md-3 gap-3"> <!-- Use row-cols-md-3 for 3 columns and gap-3 for a 16px gap -->
         {% for user in advisor_list %}
           <div class="col mb-4">
-            <div class="card" style="width: 16rem;">
+            <div class="card" style="width: 20rem;">
               <img src="{{user.avatar(400)}}" class="card-img-top" alt="...">
               <div class="card-body">
                 <h5 class="card-title">{{ user.username }}</h5>
                 <p class="card-text">Major: {{ user.m2u.first().major.name }}</p>
                 <p class="card-text">Class Year: {{ user.class_year }}</p>
-                <a href="#" class="btn btn-primary" id="myButton" onclick="handleButtonClick({{ user.id }})">Make connection</a>
+                <p class="card-text">Matching score: {{ user.score }}</p><br>
+
+                <button class="btn btn-primary" onclick="handleButtonClick({{ user.reasons }})">More details</button>
+                <button class="btn btn-primary" onclick="handleModalClick({{ user.id }})">Make connection</button>
               </div>
             </div>
           </div>
@@ -20,7 +23,7 @@
       </div>
     </div>
 
-
+    <!-- ... (rest of your code) ... -->
 
     <div id="myModal" class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -34,6 +37,27 @@
           <div class="modal-body">
             <p>The advisors on this page are ranked by how good of a match they are to your profile. Click on "Make Connection" to
             be able to chat with your advisor!</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="myOnClickModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Matching Reasons!</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul id="matching-reasons-list">
+              <!-- Matching reasons will be dynamically added here -->
+            </ul>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -63,12 +87,22 @@
     </script>
 
     <script>
-      function handleButtonClick(userId) {
+      function handleModalClick(userId) {
         var redirectUrl = "/make_connection_for_" + userId;
-
         window.location.href = redirectUrl;
       }
     </script>
 
+    <script>
+      function handleButtonClick(reason_list) {
 
+        // Populate the modal content with user information
+        $('#matching-reasons-list').empty(); // Clear existing content
+        reason_list.forEach(function (reason) {
+          $('#matching-reasons-list').append('<li>' + reason + '</li>');
+        });
+
+        $('#myOnClickModal').modal('show');
+      }
+    </script>
 {% endblock %}
