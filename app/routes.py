@@ -2196,10 +2196,18 @@ def advisor_form():
         user.internship = form.internship.data
         user.study_abroad = form.study_abroad.data
         user.student_research = form.student_research.data
+        uploaded_file = form.profile_pic.data
+        if uploaded_file is not None:
+            filename = secure_filename(uploaded_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            uploaded_file.save(file_path)
+            user.profile_pic = file_path
+            path_list = user.profile_pic.split('/')[1:]
+            new_path = '/'.join(path_list)
+            user.profile_pic = "/" + new_path
         match = Match(advisor_id=user.id)
         db.session.add(match)
         db.session.commit()
-        # user.preferred_contact_method = form.preferred_contact_method.data
 
         for org_id in form.student_orgs.data:
             o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)

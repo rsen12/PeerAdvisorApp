@@ -7,7 +7,11 @@
         {% for user in advisor_list %}
           <div class="col mb-4">
             <div class="card" style="width: 16rem;">
-              <img src="{{user.avatar(400)}}" class="card-img-top" alt="...">
+                {% if not user.profile_pic %}
+                    <img src="{{ user.avatar(400) }}" class="card-img-top" alt="...">
+                {% else %}
+                    <img src="{{ user.profile_pic }}" class="card-img-top" alt="...">
+                {% endif %}
               <div class="card-body">
                 <h5 class="card-title">{{ user.username }}</h5>
                 <p class="card-text">Major: {{ user.m2u.first().major.name }}</p>

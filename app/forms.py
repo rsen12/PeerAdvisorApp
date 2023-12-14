@@ -34,6 +34,8 @@ class AdvisorForm(FlaskForm):
     internship = BooleanField('Internship?')
     study_abroad = BooleanField('Study Abroad?')
     student_research = BooleanField('Research Experience?')
+    profile_pic = FileField('Profile Picture',
+                            validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Submit')
 
 

@@ -5,7 +5,11 @@
     <div class="container">
         <div class="row mb-4">
             <div class="col-md-5">
-                <img src="{{ current_user.avatar(384) }}" class="img-fluid">
+                {% if not current_user.profile_pic %}
+                    <img src="{{ current_user.avatar(384) }}" class="img-fluid">
+                {% else %}
+                    <img src="{{ current_user.profile_pic }}" class="img-fluid">
+                {% endif %}
             </div>
             <div class="col-md-7">
                 <div class="container">
