@@ -2347,3 +2347,74 @@ def ongoing_advisors():
         advisor_list.append(User.query.get_or_404(each_match.advisor_id))
 
     return render_template('ongoing_advisors.html', advisor_list=advisor_list, title='Your Advisors')
+
+
+@app.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    form = EditProfileForm()
+
+    form.student_orgs.choices = [(o.id, o.name) for o in Org.query.all()]
+    form.major.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.primary_advisor.choices = [(p.id, p.name) for p in Professor.query.all()]
+    form.interests.choices = [(i.id, i.name) for i in Interest.query.all()]
+    form.minor.choices = [(m.id, m.name) for m in Major.query.all()]
+    form.course.choices = [(c.id, c.name) for c in Course.query.all()]
+
+    if form.validate_on_submit():
+        user = current_user
+        user.username = form.username.data
+        user.pronouns = form.pronouns.data
+        user.internship = form.internship.data
+        user.study_abroad = form.study_abroad.data
+        user.student_research = form.student_research.data
+        uploaded_file = form.profile_pic.data
+        if uploaded_file is not None:
+            filename = secure_filename(uploaded_file.filename)
+            file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            uploaded_file.save(file_path)
+            user.profile_pic = file_path
+            path_list = user.profile_pic.split('/')[1:]
+            new_path = '/'.join(path_list)
+            user.profile_pic = "/" + new_path
+        db.session.commit()
+
+        for org in user.o2u:
+            db.session.delete(org)
+            db.session.commit()
+        for major in user.m2u:
+            db.session.delete(major)
+            db.session.commit()
+        for interest in user.i2u:
+            db.session.delete(interest)
+            db.session.commit()
+        for course in user.c2u:
+            db.session.delete(course)
+            db.session.commit()
+
+        for org_id in form.student_orgs.data:
+            o2u = StudentOrgToUser(org_id=org_id, user_id=user.id)
+            db.session.add(o2u)
+            db.session.commit()
+        for major_id in form.major.data:
+            m2u = MajorToUser(major_id=major_id, user_id=user.id)
+            db.session.add(m2u)
+            db.session.commit()
+        for interest_id in form.interests.data:
+            i2u = InterestToUser(interest_id=interest_id, user_id=user.id)
+            db.session.add(i2u)
+            db.session.commit()
+        for course_id in form.course.data:
+            c2u = CourseToUser(course_id=course_id, user_id=user.id)
+            db.session.add(c2u)
+            db.session.commit()
+        flash('Your changes have been saved, {}'.format(form.username.data))
+        return redirect(url_for('advisor_profile', username=user.username))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.pronouns.data = current_user.pronouns
+        form.internship.data = current_user.internship
+        form.study_abroad.data = current_user.study_abroad
+        form.student_research.data = current_user.student_research
+    return render_template('edit_advisor_profile.html', title='Edit Profile',
+                           form=form)
